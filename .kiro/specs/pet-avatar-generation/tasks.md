@@ -250,8 +250,8 @@
 - [x] 8. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [-] 9. Integration testing and validation
-- [-] 9.1 Test presigned URL upload flow
+- [x] 9. Integration testing and validation
+- [x] 9.1 Test presigned URL upload flow
   - Request presigned URL
   - Upload test image to S3
   - Request processing
@@ -259,14 +259,14 @@
   - Retrieve results
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 3.1, 3.2, 3.3, 3.4, 6.1, 6.2, 6.3, 6.4, 6.5_
 
-- [ ] 9.2 Test S3 event-triggered flow
+- [x] 9.2 Test S3 event-triggered flow
   - Upload image directly to S3 with correct key pattern
   - Verify s3-event-handler invocation
   - Verify job creation in DynamoDB
   - Verify processing completion
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 9.3 Test end-to-end agent workflow
+- [x] 9.3 Test end-to-end agent workflow
   - Trigger processing with test pet image
   - Verify all agent tools are invoked
   - Verify avatar generation
@@ -274,7 +274,7 @@
   - Verify results storage in S3 and DynamoDB
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 5.1, 5.2, 5.3, 5.4, 5.5, 7.1, 7.2, 7.3, 7.4, 7.5, 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 9.4 Test error scenarios
+- [x] 9.4 Test error scenarios
   - Test invalid image formats
   - Test oversized images
   - Test invalid API keys
@@ -283,7 +283,7 @@
   - Verify error logging and metrics
   - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
-- [ ] 9.5 Verify security configurations
+- [x] 9.5 Verify security configurations
   - Verify S3 buckets have public access blocked
   - Verify encryption at rest
   - Verify presigned URL expiration
@@ -291,5 +291,5 @@
   - Verify IAM role permissions
   - _Requirements: 12.1, 12.2, 12.3, 12.5, 6.6_
 
-- [ ] 10. Final Checkpoint - Make sure all tests are passing
+- [-] 10. Final Checkpoint - Make sure all tests are passing
   - Ensure all tests pass, ask the user if questions arise.
