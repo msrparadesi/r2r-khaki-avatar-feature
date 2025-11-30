@@ -621,28 +621,32 @@ def generate_identity_package(
 Before defining properties, I've identified several areas where properties can be consolidated or where one property implies another:
 
 **Consolidation Opportunities:**
-- Properties 1.1, 1.2, and 1.3 all relate to format validation and can be combined into a comprehensive validation property
-- Properties 2.3, 2.4, and 2.5 all test output structure and can be combined into a schema validation property
-- Properties 3.3 and 3.4 both test output structure and can be combined
-- Properties 4.2 and 4.3 both test prompt generation and can be combined
-- Properties 5.2, 5.3, and 5.4 all test identity package structure and can be combined
-- Properties 10.1 and 10.5 both test S3 security configuration and can be combined
+- Properties 1.1, 1.2, and 1.3 all relate to presigned URL generation and can be combined
+- Properties 2.3, 2.4, and 2.5 all test S3 event handling and can be combined
+- Properties 3.1, 3.2, and 3.3 all relate to S3 URI validation and can be combined
+- Properties 4.3, 4.4, and 4.5 all test output structure and can be combined into a schema validation property
+- Properties 5.3 and 5.4 both test output structure and can be combined
+- Properties 7.2 and 7.3 both test prompt generation and can be combined
+- Properties 8.2, 8.3, and 8.4 all test identity package structure and can be combined
+- Properties 12.1 and 12.5 both test S3 security configuration and can be combined
 
 **Redundancy Elimination:**
-- Property 1.2 (validation happens before processing) is implied by Property 1.1 (valid formats accepted) and 1.3 (invalid formats rejected)
-- Property 6.4 (results response structure) is implied by testing that results are retrievable (6.3) if we verify the structure when retrieving
+- Property 1.4 (presigned URL returns job ID) is implied by Property 1.1 (presigned URL generation)
+- Property 6.5 (results response structure) is implied by testing that results are retrievable (6.4) if we verify the structure when retrieving
 
 After reflection, the following properties provide unique validation value:
 
 ### Correctness Properties
 
-Property 1: Image format validation
-*For any* uploaded file, the system should accept it if and only if it is a valid JPEG, PNG, or HEIC file under 10MB, and should reject it with a descriptive error message otherwise
-**Validates: Requirements 1.1, 1.2, 1.3, 1.5**
+Property 1: Presigned URL generation with constraints
+*For any* presigned URL request, the system should generate an S3 presigned POST URL with 15-minute expiration that enforces JPEG/PNG/HEIC format restrictions and 50MB size limit in the policy, and return it with a unique job identifier
+**Validates: Requirements 1.1, 1.2, 1.3, 1.4**
 
-Property 2: Valid uploads create storage and jobs
-*For any* valid image upload, the system should store the image in S3 with the job ID prefix and create a corresponding DynamoDB record with status "queued"
-**Validates: Requirements 1.4**
+Property 2: Presigned URL expiration enforcement
+*For any* presigned URL that has expired, upload attempts should be rejected by S3 with an appropriate error
+**Validates: Requirements 1.5**
+
+Property 3: S3 event processing fo
 
 Property 3: Pet analysis produces complete structured output
 *For any* valid pet image, the analysis engine should produce a structured profile containing species, expression, posture, and exactly 47 personality dimensions with scores in the range 0-100
