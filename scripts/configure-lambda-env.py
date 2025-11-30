@@ -129,6 +129,18 @@ def verify_resources() -> Dict[str, bool]:
     except secretsmanager.exceptions.ResourceNotFoundException:
         results['api_key_secret'] = False
     
+    # Check SQS queue (created by tc-functors)
+    sqs = boto3.client('sqs')
+    queue_found = False
+    for queue_name in ['petavatar-processing-queue', 'processing-queue']:
+        try:
+            sqs.get_queue_url(QueueName=queue_name)
+            queue_found = True
+            break
+        except sqs.exceptions.QueueDoesNotExist:
+            continue
+    results['sqs_queue'] = queue_found
+    
     return results
 
 
@@ -202,6 +214,7 @@ def main():
             'S3_GENERATED_BUCKET': f'petavatar-generated-{account_id}',
             'API_KEY_SECRET_ARN': get_api_key_secret_arn(),
             'AGENT_RUNTIME_ARN': get_agent_runtime_arn(),
+            'SQS_QUEUE_URL': get_sqs_queue_url(),
         }
         
         for key, value in env_vars.items():

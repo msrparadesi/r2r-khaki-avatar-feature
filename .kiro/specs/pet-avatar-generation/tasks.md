@@ -241,17 +241,17 @@
   - Set API_KEY_SECRET_ARN
   - _Requirements: 9.1_
 
-- [-] 7.5 Configure S3 event notifications
+- [x] 7.5 Configure S3 event notifications
   - Set up S3 event trigger for uploads bucket
   - Configure to invoke s3-event-handler Lambda
   - Test event notification delivery
   - _Requirements: 2.1_
 
-- [ ] 8. Checkpoint - Ensure all tests pass
+- [x] 8. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 9. Integration testing and validation
-- [ ] 9.1 Test presigned URL upload flow
+- [-] 9. Integration testing and validation
+- [-] 9.1 Test presigned URL upload flow
   - Request presigned URL
   - Upload test image to S3
   - Request processing

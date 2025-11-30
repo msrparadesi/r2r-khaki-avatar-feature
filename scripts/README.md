@@ -91,6 +91,7 @@ Generates environment variable values needed for Lambda functions in the tc-func
 - Provides deployment instructions
 
 **Environment Variables Generated**:
+
 | Variable | Description | Example Value |
 |----------|-------------|---------------|
 | `DYNAMODB_TABLE_NAME` | DynamoDB table for job tracking | `petavatar-jobs` |
@@ -98,6 +99,7 @@ Generates environment variable values needed for Lambda functions in the tc-func
 | `S3_GENERATED_BUCKET` | S3 bucket for generated avatars | `petavatar-generated-123456789012` |
 | `API_KEY_SECRET_ARN` | Secrets Manager ARN for API key | `arn:aws:secretsmanager:...` |
 | `AGENT_RUNTIME_ARN` | Bedrock AgentCore runtime ARN | `arn:aws:bedrock-agentcore:...` |
+| `SQS_QUEUE_URL` | SQS processing queue URL | `https://sqs.us-east-1.amazonaws.com/...` |
 
 **Usage**:
 ```bash
