@@ -48,6 +48,38 @@ python scripts/destroy-infrastructure.py
 
 **Warning**: This will permanently delete all data in the S3 buckets and DynamoDB table. Use with caution!
 
+### configure-s3-events.py
+
+Configures S3 event notifications to trigger the `s3-event-handler` Lambda function when images are uploaded to the uploads bucket.
+
+**What it does**:
+
+- Finds the deployed `s3-event-handler` Lambda function
+- Adds Lambda permission for S3 to invoke the function
+- Configures S3 bucket event notification for `uploads/` prefix
+- Verifies the configuration
+
+**Usage**:
+
+```bash
+# Configure S3 event notifications
+python scripts/configure-s3-events.py
+
+# Configure and run a test upload
+python scripts/configure-s3-events.py --test
+```
+
+**Requirements**:
+
+- tc-functors topology must be deployed first (`tc create`)
+- S3 uploads bucket must exist (created by `create-infrastructure.py`)
+
+**Event Configuration**:
+
+- Triggers on: `s3:ObjectCreated:*` events
+- Filter prefix: `uploads/`
+- Target: `s3-event-handler` Lambda function
+
 ### configure-lambda-env.py
 
 Generates environment variable values needed for Lambda functions in the tc-functors topology.
@@ -110,4 +142,5 @@ After running `create-infrastructure.py`:
 3. Update `AGENT_RUNTIME_ARN` in `.env.petavatar` with the actual agent ARN
 4. Export environment variables: `source .env.petavatar`
 5. Deploy the tc-functors topology: `tc create`
-6. Set up S3 event notifications to trigger `s3-event-handler`
+6. Configure S3 event notifications: `python scripts/configure-s3-events.py`
+7. Test the event notification: `python scripts/configure-s3-events.py --test`

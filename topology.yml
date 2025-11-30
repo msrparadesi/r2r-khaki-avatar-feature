@@ -88,6 +88,9 @@ functions:
     env:
       # DynamoDB table for job tracking
       DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
+      # SQS queue URL for processing queue (injected by tc-functors via queue: directive)
+      # If tc-functors doesn't auto-inject, set manually after deployment
+      SQS_QUEUE_URL: ${SQS_QUEUE_URL}
   
   status-handler:
     # Returns job status from DynamoDB

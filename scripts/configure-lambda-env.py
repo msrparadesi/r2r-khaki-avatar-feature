@@ -44,6 +44,38 @@ def get_api_key_secret_arn(secret_name: str = 'petavatar-api-key') -> str:
         return f"arn:aws:secretsmanager:{get_region()}:{get_account_id()}:secret:{secret_name}"
 
 
+def get_sqs_queue_url(queue_name: str = 'petavatar-processing-queue') -> str:
+    """
+    Get the URL of the SQS processing queue.
+    
+    Args:
+        queue_name: Name of the SQS queue
+        
+    Returns:
+        Queue URL or placeholder if not found
+    """
+    sqs = boto3.client('sqs')
+    region = get_region()
+    account_id = get_account_id()
+    
+    # Try to find the queue - tc-functors may name it differently
+    possible_names = [
+        'petavatar-processing-queue',
+        'processing-queue',
+        f'petavatar-processing-queue-{account_id}'
+    ]
+    
+    for name in possible_names:
+        try:
+            response = sqs.get_queue_url(QueueName=name)
+            return response['QueueUrl']
+        except sqs.exceptions.QueueDoesNotExist:
+            continue
+    
+    # Return placeholder if not found
+    return f"https://sqs.{region}.amazonaws.com/{account_id}/petavatar-processing-queue"
+
+
 def get_agent_runtime_arn() -> str:
     """
     Get the ARN of the deployed Strands Agent.
@@ -116,6 +148,7 @@ def generate_env_file(output_file: str = '.env.petavatar') -> None:
         'S3_GENERATED_BUCKET': f'petavatar-generated-{account_id}',
         'API_KEY_SECRET_ARN': get_api_key_secret_arn(),
         'AGENT_RUNTIME_ARN': get_agent_runtime_arn(),
+        'SQS_QUEUE_URL': get_sqs_queue_url(),
     }
     
     with open(output_file, 'w') as f:
@@ -195,7 +228,11 @@ def main():
         print("3. Deploy the topology:")
         print("   tc create")
         print()
-        print("4. Configure S3 event notifications (task 7.5)")
+        print("4. Configure S3 event notifications:")
+        print("   python scripts/configure-s3-events.py")
+        print()
+        print("5. Test S3 event notification (optional):")
+        print("   python scripts/configure-s3-events.py --test")
         
     except Exception as e:
         print(f"\n✗ Error: {str(e)}", file=sys.stderr)
