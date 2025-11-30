@@ -1,0 +1,68 @@
+name: petavatar
+
+routes:
+  /presigned-url:
+    method: GET
+    function: presigned-url-handler
+    cors:
+      methods: ['GET', 'OPTIONS']
+      origins: ['*']
+      allowed_headers: ['Content-Type', 'x-api-key']
+  
+  /process:
+    method: POST
+    function: process-handler
+    cors:
+      methods: ['POST', 'OPTIONS']
+      origins: ['*']
+      allowed_headers: ['Content-Type', 'x-api-key']
+  
+  /status/{job_id}:
+    method: GET
+    function: status-handler
+    cors:
+      methods: ['GET', 'OPTIONS']
+      origins: ['*']
+      allowed_headers: ['x-api-key']
+  
+  /results/{job_id}:
+    method: GET
+    function: result-handler
+    cors:
+      methods: ['GET', 'OPTIONS']
+      origins: ['*']
+      allowed_headers: ['x-api-key']
+
+functions:
+  presigned-url-handler:
+    # Generates presigned S3 URLs for direct uploads
+    runtime: python3.13
+  
+  process-handler:
+    # Validates S3 URI and initiates processing
+    runtime: python3.13
+    queue: processing-queue
+  
+  s3-event-handler:
+    # Handles S3 upload events (configured via S3 event notifications)
+    runtime: python3.13
+    queue: processing-queue
+  
+  status-handler:
+    # Returns job status from DynamoDB
+    runtime: python3.13
+  
+  result-handler:
+    # Returns completed results with presigned URLs
+    runtime: python3.13
+  
+  process-worker:
+    # Orchestrates avatar generation via Strands Agent
+    runtime: python3.13
+    timeout: 900  # 15 minutes for long-running AI operations
+
+queues:
+  processing-queue:
+    function: process-worker
+    batch_size: 1
+    visibility_timeout: 900  # 15 minutes to match Lambda timeout

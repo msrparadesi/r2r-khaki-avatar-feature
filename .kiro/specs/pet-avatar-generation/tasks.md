@@ -1,13 +1,13 @@
 # Implementation Plan
 
-- [ ] 1. Set up project structure and dependencies
-- [ ] 1.1 Initialize Python project with uv and pyproject.toml
+- [-] 1. Set up project structure and dependencies
+- [x] 1.1 Initialize Python project with uv and pyproject.toml
   - Create project directory structure
   - Configure pyproject.toml with Python 3.13
   - Add core dependencies: boto3, strands-agents, bedrock-agentcore
   - _Requirements: 10.1, 10.2, 10.5_
 
-- [ ] 1.2 Create tc-functors topology definition
+- [-] 1.2 Create tc-functors topology definition
   - Define topology.yml with routes, functions, queues
   - Configure API Gateway routes: /presigned-url, /process, /status, /results
   - Configure Lambda functions and SQS queue
