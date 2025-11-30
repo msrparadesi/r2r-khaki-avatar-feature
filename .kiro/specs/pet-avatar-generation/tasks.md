@@ -19,8 +19,8 @@
   - Add API key creation in Secrets Manager
   - _Requirements: 12.1, 12.2, 12.5_
 
-- [ ] 2. Implement API handler Lambda functions
-- [ ] 2.1 Implement presigned-url-handler
+- [-] 2. Implement API handler Lambda functions
+- [x] 2.1 Implement presigned-url-handler
   - Create handler function to generate presigned S3 POST URLs
   - Implement API key validation
   - Generate unique job IDs
@@ -31,7 +31,7 @@
   - **Property 1: Presigned URL generation with constraints**
   - **Validates: Requirements 1.1, 1.2, 1.3, 1.4**
 
-- [ ] 2.3 Implement process-handler
+- [x] 2.3 Implement process-handler
   - Create handler to validate S3 URI and initiate processing
   - Parse and validate S3 URI format
   - Verify S3 object exists and validate format/size
@@ -42,14 +42,14 @@
   - **Property 3: S3 URI validation and processing**
   - **Validates: Requirements 3.1, 3.2, 3.3**
 
-- [ ] 2.5 Implement s3-event-handler
+- [x] 2.5 Implement s3-event-handler
   - Create handler for S3 event notifications
   - Validate object key pattern (uploads/{job_id}/*)
   - Extract job ID and create/update DynamoDB record
   - Send message to processing queue
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 2.6 Implement status-handler
+- [-] 2.6 Implement status-handler
   - Create handler to query job status from DynamoDB
   - Implement API key validation
   - Return current status and progress
