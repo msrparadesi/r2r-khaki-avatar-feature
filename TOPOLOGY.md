@@ -61,22 +61,50 @@ The following resources must be created separately (not yet supported by tc-func
 
 ## Environment Variables
 
-Lambda functions require the following environment variables:
+Lambda functions require the following environment variables (configured in `topology.yml`):
 
-- `DYNAMODB_TABLE_NAME`: Name of the jobs table
-- `S3_UPLOAD_BUCKET`: Bucket for uploaded images
-- `S3_GENERATED_BUCKET`: Bucket for generated avatars
-- `AGENT_RUNTIME_ARN`: ARN of the deployed Strands Agent
-- `API_KEY_SECRET_ARN`: ARN of the API key in Secrets Manager
-- `AWS_REGION`: AWS region (default: us-east-1)
+| Variable | Used By | Description |
+|----------|---------|-------------|
+| `DYNAMODB_TABLE_NAME` | process-handler, s3-event-handler, status-handler, result-handler, process-worker | DynamoDB table name (`petavatar-jobs`) |
+| `S3_UPLOAD_BUCKET` | presigned-url-handler, process-worker | S3 bucket for uploaded images (`petavatar-uploads-{account-id}`) |
+| `S3_GENERATED_BUCKET` | result-handler, process-worker | S3 bucket for generated avatars (`petavatar-generated-{account-id}`) |
+| `API_KEY_SECRET_ARN` | presigned-url-handler, process-handler, status-handler, result-handler | Secrets Manager ARN for API key validation |
+| `AGENT_RUNTIME_ARN` | process-worker | Bedrock AgentCore runtime ARN for Strands Agent |
+
+The `SQS_QUEUE_URL` is automatically injected by tc-functors for functions connected to queues.
+
+### Configuring Environment Variables
+
+Environment variables are configured using shell variable substitution in `topology.yml`:
+
+```yaml
+env:
+  DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
+  S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET}
+```
+
+Use the configuration script to generate values:
+
+```bash
+# Generate environment configuration
+python scripts/configure-lambda-env.py
+
+# Export variables before deployment
+source .env.petavatar
+
+# Deploy topology
+tc create
+```
 
 ## Deployment
 
 1. Create infrastructure: `python scripts/create-infrastructure.py`
-2. Deploy topology: `tc create`
+2. Generate environment config: `python scripts/configure-lambda-env.py`
 3. Deploy Strands Agent: `agentcore launch`
-4. Configure S3 event notifications
-5. Set Lambda environment variables
+4. Update `AGENT_RUNTIME_ARN` in `.env.petavatar` with actual agent ARN
+5. Export environment variables: `source .env.petavatar`
+6. Deploy topology: `tc create`
+7. Configure S3 event notifications (task 7.5)
 
 ## CORS Configuration
 

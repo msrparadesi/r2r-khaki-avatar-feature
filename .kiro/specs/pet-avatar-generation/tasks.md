@@ -234,14 +234,14 @@
   - Capture agent ARN for Lambda configuration
   - _Requirements: 9.4_
 
-- [-] 7.4 Configure Lambda environment variables
+- [x] 7.4 Configure Lambda environment variables
   - Set DYNAMODB_TABLE_NAME
   - Set S3_UPLOAD_BUCKET and S3_GENERATED_BUCKET
   - Set AGENT_RUNTIME_ARN
   - Set API_KEY_SECRET_ARN
   - _Requirements: 9.1_
 
-- [ ] 7.5 Configure S3 event notifications
+- [-] 7.5 Configure S3 event notifications
   - Set up S3 event trigger for uploads bucket
   - Configure to invoke s3-event-handler Lambda
   - Test event notification delivery

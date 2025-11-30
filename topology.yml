@@ -62,28 +62,55 @@ functions:
     # Generates presigned S3 URLs for direct uploads
     runtime:
       lang: python3.13
+    env:
+      # S3 bucket for pet image uploads
+      # Format: petavatar-uploads-{account_id}
+      S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET}
+      # Secrets Manager ARN for API key validation
+      API_KEY_SECRET_ARN: ${API_KEY_SECRET_ARN}
   
   process-handler:
     # Validates S3 URI and initiates processing
     runtime:
       lang: python3.13
     queue: processing-queue
+    env:
+      # DynamoDB table for job tracking
+      DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
+      # Secrets Manager ARN for API key validation
+      API_KEY_SECRET_ARN: ${API_KEY_SECRET_ARN}
   
   s3-event-handler:
     # Handles S3 upload events (configured via S3 event notifications)
     runtime:
       lang: python3.13
     queue: processing-queue
+    env:
+      # DynamoDB table for job tracking
+      DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
   
   status-handler:
     # Returns job status from DynamoDB
     runtime:
       lang: python3.13
+    env:
+      # DynamoDB table for job tracking
+      DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
+      # Secrets Manager ARN for API key validation
+      API_KEY_SECRET_ARN: ${API_KEY_SECRET_ARN}
   
   result-handler:
     # Returns completed results with presigned URLs
     runtime:
       lang: python3.13
+    env:
+      # DynamoDB table for job tracking
+      DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
+      # S3 bucket for generated avatars
+      # Format: petavatar-generated-{account_id}
+      S3_GENERATED_BUCKET: ${S3_GENERATED_BUCKET}
+      # Secrets Manager ARN for API key validation
+      API_KEY_SECRET_ARN: ${API_KEY_SECRET_ARN}
   
   process-worker:
     # Orchestrates avatar generation via Strands Agent
@@ -91,6 +118,17 @@ functions:
       lang: python3.13
       role_file: scripts/iam-policies/petavatar-lambda-policy.json
     timeout: 900  # 15 minutes for long-running AI operations
+    env:
+      # DynamoDB table for job tracking
+      DYNAMODB_TABLE_NAME: ${DYNAMODB_TABLE_NAME}
+      # S3 bucket for pet image uploads
+      # Format: petavatar-uploads-{account_id}
+      S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET}
+      # S3 bucket for generated avatars
+      # Format: petavatar-generated-{account_id}
+      S3_GENERATED_BUCKET: ${S3_GENERATED_BUCKET}
+      # Bedrock AgentCore runtime ARN for Strands Agent
+      AGENT_RUNTIME_ARN: ${AGENT_RUNTIME_ARN}
 
 queues:
   processing-queue:
