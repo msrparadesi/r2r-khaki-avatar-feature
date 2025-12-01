@@ -8,6 +8,8 @@ This guide explains how to use the PetAvatar API with Postman to transform pet p
 |----------|-------|
 | **Base URL** | `https://42kw05zl4d.execute-api.us-west-2.amazonaws.com` |
 | **API Key** | `nX92rzyA9PVj3lniXfHb6H1Uzk3fC8oOgTNRnUjHMSw` |
+
+> **Note:** Retrieve the current API key from AWS Secrets Manager if it has been rotated.
 | **Region** | `us-west-2` |
 
 ## Postman Setup
